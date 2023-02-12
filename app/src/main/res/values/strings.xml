@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">CAA</string>
+    <string name="CAATitle">Welcome</string>
+    <string name="ReportButton">Report</string>
+    <string name="Accident">Accident</string>
+    <string name="type">Crime</string>
+    <string name="subTitle">Crime/Accident Type</string>
+</resources>
