@@ -1,17 +1,21 @@
-package ie.wit.caa
+package ie.wit.caa.activities
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import ie.wit.caa.databinding.ActivityMainBinding
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
+import androidx.core.content.ContextCompat.startActivity
 import androidx.core.view.get
 import com.google.android.material.snackbar.Snackbar
+import ie.wit.caa.R
 import ie.wit.caa.main.caaApp
 import ie.wit.caa.models.CaaModel
 
@@ -36,11 +40,9 @@ class ReportCrimeActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        app = this.application as caaApp
         caaLayout = ActivityMainBinding.inflate(layoutInflater)
         setContentView(caaLayout.root)
-
+        app = this.application as caaApp
 
         caaLayout.amountPicker.minValue = 1
         caaLayout.amountPicker.maxValue = 10
@@ -58,24 +60,35 @@ class ReportCrimeActivity : AppCompatActivity() {
             ) {
                 // Do something when an item is selected
             }
+
             override fun onNothingSelected(parent: AdapterView<*>) {
                 // Do something when nothing is selected
             }
         }
-        caaLayout.addCrime.setOnClickListener{
+        caaLayout.addCrime.setOnClickListener {
             val name = caaLayout.FullName.text.toString()
             val description = caaLayout.Description.text.toString()
 
             val crimeType = caaLayout.spinner.selectedItem.toString()
             val crimeLevel = caaLayout.amountPicker.value
             if (name.isNotEmpty() && description.isNotEmpty()) {
-                val crime = CaaModel(name = name, description = description, type = crimeType, level = crimeLevel)
+                val crime = CaaModel(
+                    name = name,
+                    description = description,
+                    type = crimeType,
+                    level = crimeLevel
+                )
                 app.crimeStore.create(crime)
-                Snackbar.make(caaLayout.root, "Crime added successfully", Snackbar.LENGTH_LONG).show()
+                Snackbar.make(caaLayout.root, "Crime added successfully", Snackbar.LENGTH_LONG)
+                    .show()
                 caaLayout.FullName.setText("")
                 caaLayout.Description.setText("")
             } else {
-                Toast.makeText(applicationContext, "Please enter both name and description of the crime", Toast.LENGTH_LONG).show()
+                Toast.makeText(
+                    applicationContext,
+                    "Please enter both name and description of the crime",
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
 
@@ -87,4 +100,17 @@ class ReportCrimeActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.menu_caa, menu)
         return true
     }
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+
+        return when (item.itemId) {
+            R.id.action_List -> {
+                startActivity(Intent(this, List::class.java))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 }
+

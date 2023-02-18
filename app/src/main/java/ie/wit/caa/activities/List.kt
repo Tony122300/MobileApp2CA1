@@ -7,6 +7,7 @@ import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import ie.wit.caa.R
+import ie.wit.caa.activities.ReportCrimeActivity
 import ie.wit.caa.adapter.CrimeAdapter
 import ie.wit.caa.main.caaApp
 import ie.wit.caa.databinding.ActivityListBinding
@@ -32,10 +33,9 @@ class List : AppCompatActivity() {
 
         override fun onOptionsItemSelected(item: MenuItem): Boolean {
             return when (item.itemId) {
-                R.id.action_add -> { startActivity(
+                R.id.action_Crime -> { startActivity(
                     Intent(this,
-                        ReportCrimeActivity::class.java)
-                )
+                        ReportCrimeActivity::class.java))
                     true
                 }
                 else -> super.onOptionsItemSelected(item)

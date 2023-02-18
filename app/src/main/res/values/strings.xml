@@ -11,4 +11,6 @@
     <string name="add_button">Add Crime/Accident</string>
     <string name="menu_action_report_C_A">Add</string>
     <string name="list">list</string>
+    <string name="action_crime">Add Crime</string>
+    <string name="action_list">List Crime</string>
 </resources>
