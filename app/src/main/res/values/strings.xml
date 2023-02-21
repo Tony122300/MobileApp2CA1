@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">CAA</string>
+    <string name="CAATitle">Welcome</string>
+    <string name="ReportButton">Report</string>
+    <string name="Accident">Accident</string>
+    <string name="type">Crime</string>
+    <string name="subTitle">Crime/Accident Type</string>
+    <string name="fullName">Name of person reporting</string>
+    <string name="description">Description of Crime/Accident</string>
+    <string name="button_location">Location of Crime/Accident</string>
+    <string name="add_button">Add Crime/Accident</string>
+    <string name="menu_action_report_C_A">Add</string>
+    <string name="list">list</string>
+    <string name="action_crime">Add Crime</string>
+    <string name="action_list">List Crime</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="nav_header_title">Tony</string>
+    <string name="nav_header_subtitle">20090185@mail.wit.ie</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="no_crimes">No Crimes/Accidents, all safe!</string>
+
+</resources>
