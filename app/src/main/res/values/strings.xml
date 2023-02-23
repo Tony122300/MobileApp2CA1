@@ -13,11 +13,18 @@
     <string name="list">list</string>
     <string name="action_crime">Add Crime</string>
     <string name="action_list">List Crime</string>
-    <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="nav_header_title">Tony</string>
     <string name="nav_header_subtitle">20090185@mail.wit.ie</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="no_crimes">No Crimes/Accidents, all safe!</string>
+    <string name="cant_upload_crime">Error : cant upload crime please try again</string>
+
+    <string name="report_details">Report Details</string>
+    <string name="crime_name">Crime/Accident Names :</string>
+    <string name="date_time">Date and Time :</string>
+    <string name="Description">Description:</string>
+    <string name="Danger_lvl">Danger Level :</string>
 
 </resources>

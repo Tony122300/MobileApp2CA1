@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.snackbar.Snackbar
@@ -45,6 +47,10 @@ class ReportCrimeActivityFragment : Fragment() {
         _fragBinding = FragmentReportCrimeActivityBinding.inflate(inflater, container, false)
         val root = fragBinding.root
         activity?.title = getString(ie.wit.caa.R.string.action_crime)
+        reportCrimeActivityViewModel = ViewModelProvider(this).get(ReportCrimeActivityViewModel::class.java)
+        reportCrimeActivityViewModel.observableStatus.observe(viewLifecycleOwner, Observer {
+                status -> status?.let { render(status) }
+        })
 
         fragBinding.amountPicker.minValue = 1
         fragBinding.amountPicker.maxValue = 10
@@ -66,6 +72,18 @@ class ReportCrimeActivityFragment : Fragment() {
         }
         setButtonListener(fragBinding)
     return root;
+    }
+
+    private fun render(status: Boolean) {
+        when (status) {
+            true -> {
+                view?.let {
+                    //Uncomment this if you want to immediately return to Report
+                    //findNavController().popBackStack()
+                }
+            }
+            false -> Toast.makeText(context,getString(ie.wit.caa.R.string.cant_upload_crime),Toast.LENGTH_LONG).show()
+        }
     }
 
     override fun onDestroyView() {
@@ -92,6 +110,7 @@ class ReportCrimeActivityFragment : Fragment() {
                     .show()
                 fragBinding.FullName.setText("")
                 fragBinding.Description.setText("")
+                reportCrimeActivityViewModel.addCrime(crime)
             } else {
                 Toast.makeText(
                     requireContext(),
