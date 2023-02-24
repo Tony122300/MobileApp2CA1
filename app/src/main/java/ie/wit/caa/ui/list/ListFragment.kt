@@ -13,12 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import ie.wit.caa.R
 import ie.wit.caa.adapter.CrimeAdapter
+import ie.wit.caa.adapter.ReportClickListener
 import ie.wit.caa.databinding.FragmentListBinding
 
 import ie.wit.caa.main.caaApp
 import ie.wit.caa.models.CaaModel
 
-class ListFragment : Fragment() {
+class ListFragment : Fragment(), ReportClickListener {
     lateinit var app: caaApp
     private var _fragBinding: FragmentListBinding? = null
     private val fragBinding get() = _fragBinding!!
@@ -40,7 +41,7 @@ class ListFragment : Fragment() {
         fragBinding.recyclerView.layoutManager = LinearLayoutManager(activity)
 
         listViewModel = ViewModelProvider(this).get(ListViewModel::class.java)
-        listViewModel.observabeCaaList.observe(viewLifecycleOwner, Observer {
+        listViewModel.observableCaaList.observe(viewLifecycleOwner, Observer {
                 caa ->
             caa?.let { render(caa) }
         })
@@ -76,8 +77,9 @@ class ListFragment : Fragment() {
             requireView().findNavController()) || super.onOptionsItemSelected(item)
     }
 
+
     private fun render(caaList: List<CaaModel>) {
-        fragBinding.recyclerView.adapter = CrimeAdapter(caaList)
+        fragBinding.recyclerView.adapter = CrimeAdapter(caaList,this)
         if (caaList.isEmpty()) {
             fragBinding.recyclerView.visibility = View.GONE
             fragBinding.noCrimes.visibility = View.VISIBLE
@@ -85,5 +87,13 @@ class ListFragment : Fragment() {
             fragBinding.recyclerView.visibility = View.VISIBLE
             fragBinding.noCrimes.visibility = View.GONE
         }
+    }
+    override fun onReportClick(caa: CaaModel) {
+        val action = ListFragmentDirections.actionListFragmentToReportDetailsFragment(caa.id)
+       findNavController().navigate(action)
+    }
+    override fun onResume() {
+        super.onResume()
+        listViewModel.load()
     }
 }

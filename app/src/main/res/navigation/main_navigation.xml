@@ -15,6 +15,9 @@
             app:destination="@id/listFragment"
             app:enterAnim="@anim/nav_default_enter_anim"
             app:exitAnim="@anim/nav_default_exit_anim"/>
+        <action
+            android:id="@+id/action_reportCrimeActivityFragment_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
     </fragment>
     <fragment
         android:id="@+id/listFragment"
@@ -35,11 +38,25 @@
         android:name="ie.wit.caa.ui.details.ReportDetailsFragment"
         android:label="fragment_report_details"
         tools:layout="@layout/fragment_report_details" >
-        <action
-            android:id="@+id/action_reportDetailsFragment_to_listFragment"
-            app:destination="@id/listFragment" />
         <argument
             android:name="crimeid"
             app:argType="long" />
+        <action
+            android:id="@+id/action_reportDetailsFragment_to_listFragment"
+            app:destination="@id/listFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="ie.wit.caa.ui.map.MapsFragment"
+        android:label="fragment_maps"
+        tools:layout="@layout/fragment_maps" >
+    <argument
+        android:name="location"
+        app:argType="ie.wit.caa.models.Location"  />
+    </fragment>
+    <fragment
+        android:id="@+id/viewMapsFragment"
+        android:name="ie.wit.caa.ui.viewMap.ViewMapsFragment"
+        android:label="fragment_view_maps"
+        tools:layout="@layout/fragment_view_maps" />
 </navigation>

@@ -1,14 +1,22 @@
-
-<androidx.cardview.widget.CardView
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="8dp"
-    android:elevation="24dp">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="caa"
+            type="ie.wit.caa.models.CaaModel" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:elevation="24dp">
 
     <RelativeLayout
+        android:id="@+id/ActivityCrime"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="35dp">
@@ -45,5 +53,18 @@
             android:text="@string/fullName"
             android:textSize="24sp" />
 
+        <TextView
+            android:id="@+id/dangerlvl"
+            android:layout_width="121dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/Type"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="17dp"
+            android:layout_toEndOf="@+id/imageIcon"
+            android:text="@{Integer.toString(caa.level)}"
+            android:textSize="24sp"
+            tools:text="10" />
+
     </RelativeLayout>
 </androidx.cardview.widget.CardView>
+</layout>

@@ -10,7 +10,7 @@ import ie.wit.caa.models.CaaStore
 class ListViewModel : ViewModel() {
 private val caaList = MutableLiveData<List<CaaModel>>()
 
-    val observabeCaaList: LiveData<List<CaaModel>>
+    val observableCaaList: LiveData<List<CaaModel>>
     get() = caaList
 
     init {
