@@ -12,7 +12,7 @@ import android.widget.Toast
 import androidx.navigation.fragment.navArgs
 import ie.wit.caa.R
 import ie.wit.caa.models.CaaJSONStore
-import ie.wit.caa.models.CaaManager
+//import ie.wit.caa.models.CaaManager
 
 class ReportDetailsFragment : Fragment() {
 

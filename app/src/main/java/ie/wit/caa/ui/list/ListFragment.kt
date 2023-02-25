@@ -2,6 +2,7 @@ package ie.wit.caa.ui.list
 
 import android.os.Bundle
 import android.view.*
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -67,9 +68,22 @@ class ListFragment : Fragment(), ReportClickListener {
         _fragBinding = null
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_list, menu)
-        super.onCreateOptionsMenu(menu, inflater)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val searchView = view.findViewById<SearchView>(R.id.searchView)
+
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // Do nothing when the user submits the search query
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // Update the filter and refresh the adapter when the user types a new search query
+                newText?.let { listViewModel.filterList(it) }
+                return true
+            }
+        })
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

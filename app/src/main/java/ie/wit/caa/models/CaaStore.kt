@@ -6,4 +6,6 @@ interface CaaStore {
     fun create(caa: CaaModel)
     fun update(caa: CaaModel)
     fun delete(caa: CaaModel)
+    fun findByName(name: String): CaaModel?
+
 }

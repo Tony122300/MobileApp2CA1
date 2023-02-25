@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import ie.wit.caa.models.CaaJSONStore
-import ie.wit.caa.models.CaaManager
+//import ie.wit.caa.models.CaaManager
 import ie.wit.caa.models.CaaModel
 
 class ReportCrimeActivityViewModel : ViewModel() {

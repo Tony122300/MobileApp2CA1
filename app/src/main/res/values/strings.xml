@@ -38,5 +38,5 @@
     <!-- Date and Time -->
     <string name="date">"Date of Report"</string>
     <string name="time">"Time of Report"</string>
-
+    <string name="search">"Filter"</string>
 </resources>

@@ -39,7 +39,7 @@ object CaaJSONStore : CaaStore {
     }
 
     override fun findById(id: Long): CaaModel? {
-        val foundCaa: CaaModel? = CaaJSONStore.caas.find { it.id == id }
+        val foundCaa: CaaModel? = caas.find { it.id == id }
         return foundCaa
     }
 
@@ -56,7 +56,7 @@ object CaaJSONStore : CaaStore {
 
     override fun update(caa: CaaModel) {
         val caaList = findAll() as ArrayList<CaaModel>
-        var foundCrime: CaaModel? = caaList.find { p -> p.id == caa.id }
+        val foundCrime: CaaModel? = caaList.find { p -> p.id == caa.id }
         if (foundCrime != null) {
             foundCrime.name = caa.name
             foundCrime.type = caa.type
@@ -69,6 +69,12 @@ object CaaJSONStore : CaaStore {
         }
         serialize()
     }
+
+    override fun findByName(name: String): CaaModel? {
+        val foundCaa: CaaModel? = caas.find { it.name.equals(name, ignoreCase = true) }
+        return foundCaa
+    }
+
 
     private fun serialize() {
         val jsonString = gsonBuilder.toJson(caas, listType)
