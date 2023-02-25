@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.snackbar.Snackbar
 import ie.wit.caa.databinding.FragmentReportCrimeActivityBinding
+import ie.wit.caa.main.caaApp
 import ie.wit.caa.models.CaaModel
 import ie.wit.caa.models.Location
 import timber.log.Timber.i
@@ -24,7 +25,7 @@ import java.util.*
 
 
 class ReportCrimeActivityFragment : Fragment() {
-
+    lateinit var app: caaApp
     private lateinit var caaApp: CaaModel
     private var _fragBinding: FragmentReportCrimeActivityBinding? = null
     private val fragBinding get() = _fragBinding!!
@@ -45,6 +46,8 @@ class ReportCrimeActivityFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         caaApp = CaaModel()
+
+        app = activity?.application as caaApp
         //app = activity?.application as caaApp
         setHasOptionsMenu(true)
 
@@ -173,7 +176,10 @@ class ReportCrimeActivityFragment : Fragment() {
                     type = crimeType,
                     level = crimeLevel,
                     date = date,
-                    time = time
+                    time = time,
+                    lat = app.loc.lat,
+                    lng = app.loc.lng,
+                    zoom = app.loc.zoom
                 )
                // app.crimeStore.create(crime)
                 Snackbar.make(fragBinding.root, "Crime added successfully", Snackbar.LENGTH_LONG)
@@ -222,9 +228,9 @@ class ReportCrimeActivityFragment : Fragment() {
                             i("Got Location ${result.data.toString()}")
                             val location = result.data!!.extras?.getParcelable<Location>("location")!!
                             i("Location == $location")
-                            caaApp.lat = location.lat
-                            caaApp.lng = location.lng
-                            caaApp.zoom = location.zoom
+                            caaApp.lat = app.loc.lat
+                            caaApp.lng = app.loc.lng
+                            caaApp.zoom = app.loc.zoom
                         } // end of if
                     }
                     RESULT_CANCELED -> { } else -> { }

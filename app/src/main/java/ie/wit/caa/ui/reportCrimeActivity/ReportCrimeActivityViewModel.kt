@@ -3,6 +3,7 @@ package ie.wit.caa.ui.reportCrimeActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import ie.wit.caa.models.CaaJSONStore
 import ie.wit.caa.models.CaaManager
 import ie.wit.caa.models.CaaModel
 
@@ -15,7 +16,7 @@ class ReportCrimeActivityViewModel : ViewModel() {
 
     fun addCrime(caa: CaaModel) {
         status.value = try {
-            CaaManager.create(caa)
+            CaaJSONStore.create(caa)
             true
         } catch (e: IllegalArgumentException) {
             false

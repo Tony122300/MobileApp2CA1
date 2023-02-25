@@ -38,6 +38,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerDragListe
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             super.onViewCreated(view, savedInstanceState)
 
+            app = activity?.application as caaApp
             location = requireArguments().getParcelable<ie.wit.caa.models.Location>("location")!!
             val mapsFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
            mapsFragment.getMapAsync(this)
@@ -68,7 +69,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerDragListe
             location.lat = marker.position.latitude
             location.lng = marker.position.longitude
             location.zoom = map.cameraPosition.zoom
-            //app.loc=location
+            app.loc=location
         }
 
 
@@ -83,12 +84,5 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerDragListe
             _fragBinding = null
         }
 
-    override fun onBackPressed() {
-        val resultIntent = Intent()
-        resultIntent.putExtra("location", location)
-        requireActivity().setResult(Activity.RESULT_OK, resultIntent)
-        requireActivity().finish()
-        activity?.finish()
-    }
 
 }

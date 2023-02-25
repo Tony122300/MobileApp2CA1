@@ -3,6 +3,7 @@ package ie.wit.caa.ui.list
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import ie.wit.caa.models.CaaJSONStore
 import ie.wit.caa.models.CaaManager
 import ie.wit.caa.models.CaaModel
 import ie.wit.caa.models.CaaStore
@@ -18,6 +19,6 @@ private val caaList = MutableLiveData<List<CaaModel>>()
     }
 
     fun load(){
-        caaList.value = CaaManager.findAll()
+        caaList.value = CaaJSONStore.findAll()
     }
 }

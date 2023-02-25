@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.navigation.fragment.navArgs
 import ie.wit.caa.R
+import ie.wit.caa.models.CaaJSONStore
 import ie.wit.caa.models.CaaManager
 
 class ReportDetailsFragment : Fragment() {
@@ -33,7 +34,7 @@ class ReportDetailsFragment : Fragment() {
 
 
         val caaId = args.crimeid
-        val caa = CaaManager.findById(caaId)
+        val caa = CaaJSONStore.findById(caaId)
 
         view.findViewById<TextView>(R.id.editCrimeType).text = caa?.type
         view.findViewById<TextView>(R.id.editDecription).text = caa?.description

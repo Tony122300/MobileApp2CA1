@@ -21,11 +21,13 @@ fun generateRandomId(): Long {
     return Random().nextLong()
 }
 
-class CaaJSONStore(private val context: Context) : CaaStore {
+object CaaJSONStore : CaaStore {
+    private lateinit var context: Context
 
     var caas = mutableListOf<CaaModel>()
 
-    init {
+    fun initialize(context: Context) {
+        this.context = context
         if (exists(context, JSON_FILE)) {
             deserialize()
         }
@@ -37,7 +39,8 @@ class CaaJSONStore(private val context: Context) : CaaStore {
     }
 
     override fun findById(id: Long): CaaModel? {
-        TODO("Not yet implemented")
+        val foundCaa: CaaModel? = CaaJSONStore.caas.find { it.id == id }
+        return foundCaa
     }
 
     override fun create(caa: CaaModel) {
@@ -53,8 +56,8 @@ class CaaJSONStore(private val context: Context) : CaaStore {
 
     override fun update(caa: CaaModel) {
         val caaList = findAll() as ArrayList<CaaModel>
-        var foundCrime: CaaModel? = caaList.find{ p ->p.id == caa.id}
-        if (foundCrime != null){
+        var foundCrime: CaaModel? = caaList.find { p -> p.id == caa.id }
+        if (foundCrime != null) {
             foundCrime.name = caa.name
             foundCrime.type = caa.type
             foundCrime.level = caa.level
