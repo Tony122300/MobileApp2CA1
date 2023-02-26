@@ -22,21 +22,17 @@ private val caaList = MutableLiveData<List<CaaModel>>()
         caaList.value = CaaJSONStore.findAll()
     }
 
-    fun search(query: String) {
+    fun filterList(query: String) {
         val results = mutableListOf<CaaModel>()
 
         for (caa in CaaJSONStore.findAll()) {
-            if (caa.type.contains(query, ignoreCase = true)) {
+            if (caa.type.contains(query, ignoreCase = true) ||
+                caa.name.contains(query, ignoreCase = true)) {
                 results.add(caa)
             }
         }
 
+
         caaList.value = results
-    }
-    fun filterList(query: String) {
-        val filteredList = CaaJSONStore.findAll().filter {
-            it.name.contains(query, ignoreCase = true)
-        }
-        caaList.value = filteredList
     }
 }

@@ -6,10 +6,13 @@ import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -27,7 +30,7 @@ import ie.wit.caa.models.Location
 
 //import ie.wit.caa.models.CaaManager
 
-class ReportDetailsFragment : Fragment(){ //GoogleMap.OnMarkerClickListener, OnMapReadyCallback {
+class ReportDetailsFragment : Fragment(){//, GoogleMap.OnMarkerClickListener, OnMapReadyCallback {
 
     companion object {
         fun newInstance() = ReportDetailsFragment()
@@ -53,7 +56,7 @@ class ReportDetailsFragment : Fragment(){ //GoogleMap.OnMarkerClickListener, OnM
         val caaId = args.crimeid
         val caa = CaaJSONStore.findById(caaId)
 
-        view.findViewById<TextView>(R.id.editCrimeType).text = caa?.type
+        view.findViewById<TextView>(R.id.editCrimeType).text = caa?.type.toString()
         view.findViewById<TextView>(R.id.editDecription).text = caa?.description
         view.findViewById<TextView>(R.id.editDangerLvl).text = caa?.level.toString()
         view.findViewById<TextView>(R.id.editName).text = caa?.name
@@ -61,53 +64,86 @@ class ReportDetailsFragment : Fragment(){ //GoogleMap.OnMarkerClickListener, OnM
         view.findViewById<TextView>(R.id.editTime).text = caa?.time
         Toast.makeText(context, "erer:${args.crimeid}", Toast.LENGTH_LONG).show()
 
-//        mapView = view.findViewById(R.id.mapViews)
-//        mapView.onCreate(savedInstanceState)
-//        mapView.onResume()
-
+        view.findViewById<Button>(R.id.deleteReportButton).setOnClickListener {
+            viewModel.delete(caa!!)
+            findNavController().navigate(R.id.action_reportDetailsFragment_to_listFragment)
+        }
+        view.findViewById<Button>(R.id.editReportButton).setOnClickListener {
+            val type = view.findViewById<TextView>(R.id.editCrimeType).text.toString()
+            val description = view.findViewById<TextView>(R.id.editDecription).text.toString()
+            val level = view.findViewById<TextView>(R.id.editDangerLvl).text.toString().toIntOrNull() ?: 0
+            val name = view.findViewById<TextView>(R.id.editName).text.toString()
+            val date = view.findViewById<TextView>(R.id.editDate).text.toString()
+            val time = view.findViewById<TextView>(R.id.editTime).text.toString()
+            if (name.isNotEmpty() && description.isNotEmpty() && level != null && type.isNotEmpty() && date.isNotEmpty() && time.isNotEmpty()) {
+                caa?.name = name
+                caa?.description = description
+                caa?.level = level
+                caa?.type = type
+                caa?.date = date
+                caa?.time = time
+                CaaJSONStore.update(caa!!)
+                Toast.makeText(context, "Report updated", Toast.LENGTH_LONG).show()
+                findNavController().navigate(R.id.action_reportDetailsFragment_to_listFragment)
+            } else {
+                Toast.makeText(context, "Please fill all the details", Toast.LENGTH_LONG).show()
+            }
+        }
         return view
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
 
-//        // Get the GoogleMap object from the MapView
-//        mapView.getMapAsync(this)
-    }
+//        view.findViewById<Button>(R.id.deleteReportButton).setOnClickListener {
+//            showConfirmationDialog {
+//                viewModel.delete(caa!!)
+//                findNavController().navigate(R.id.action_reportDetailsFragment_to_listFragment)
+//            }
+//        }
+//
+//        view.findViewById<Button>(R.id.editReportButton).setOnClickListener {
+//            showConfirmationDialog {
+//                val type = view.findViewById<TextView>(R.id.editCrimeType).text.toString()
+//                val description = view.findViewById<TextView>(R.id.editDecription).text.toString()
+//                val level =
+//                    view.findViewById<TextView>(R.id.editDangerLvl).text.toString().toIntOrNull()
+//                        ?: 0
+//                val name = view.findViewById<TextView>(R.id.editName).text.toString()
+//                val date = view.findViewById<TextView>(R.id.editDate).text.toString()
+//                val time = view.findViewById<TextView>(R.id.editTime).text.toString()
+//                if (name.isNotEmpty() && description.isNotEmpty() && level != null && type.isNotEmpty() && date.isNotEmpty() && time.isNotEmpty()) {
+//                    caa?.name = name
+//                    caa?.description = description
+//                    caa?.level = level
+//                    caa?.type = type
+//                    caa?.date = date
+//                    caa?.time = time
+//                    CaaJSONStore.update(caa!!)
+//                    Toast.makeText(context, "Report updated", Toast.LENGTH_LONG).show()
+//                    findNavController().navigate(R.id.action_reportDetailsFragment_to_listFragment)
+//                } else {
+//                    Toast.makeText(context, "Please fill all the details", Toast.LENGTH_LONG).show()
+//                }
+//            }
+//        }
+//            return view
+//        }
+//    private fun showConfirmationDialog(action: () -> Unit) {
+//        val dialogView = LayoutInflater.from(requireContext()).inflate(R.layout.fragment_report_details, null)
+//        val dialog = AlertDialog.Builder(requireContext())
+//            .setView(dialogView)
+//            .create()
+//
+//        dialogView.findViewById<Button>(R.id.btn_cancel).setOnClickListener {
+//            dialog.dismiss()
+//        }
+//
+//        dialogView.findViewById<Button>(R.id.btn_save).setOnClickListener {
+//            action.invoke()
+//            dialog.dismiss()
+//        }
+//
+//        dialog.show()
+//    }
 
-//    override fun onMapReady(googleMap: GoogleMap) {
-//        map = googleMap
-//        configureMap()
-//    }
-//
-//    private fun configureMap() {
-//        map.uiSettings.isZoomControlsEnabled = true
-//        app.caas.findAll().forEach {
-//            val loc = LatLng(it.lat, it.lng)
-//            val options = MarkerOptions().title(it.name).position(loc)
-//            map.addMarker(options)?.tag = it.id
-//            map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, it.zoom))
-//            map.setOnMarkerClickListener(this)
-//        }
-//    }
-//
-//    override fun onMarkerClick(marker: Marker): Boolean {
-//        val foundCaa: CaaModel? = CaaJSONStore.caas.find { it.id == marker.tag }
-//        return false
-//    }
-//
-//    override fun onResume() {
-//        super.onResume()
-//        if (this::map.isInitialized) {
-//            map.setOnMarkerClickListener(this)
-//        }
-//    }
-//
-//    override fun onPause() {
-//        super.onPause()
-//        if (this::map.isInitialized) {
-//            map.setOnMarkerClickListener(null)
-//        }
-//
-//    }
+
 }
