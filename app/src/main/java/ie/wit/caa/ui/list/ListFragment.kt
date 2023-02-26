@@ -80,7 +80,7 @@ class ListFragment : Fragment(), ReportClickListener {
 
             override fun onQueryTextChange(newText: String?): Boolean {
                 // Update the filter and refresh the adapter when the user types a new search query
-                newText?.let { listViewModel.filterList(it) }
+                newText?.let { listViewModel.filterList(it); listViewModel.search(it) }
                 return true
             }
         })

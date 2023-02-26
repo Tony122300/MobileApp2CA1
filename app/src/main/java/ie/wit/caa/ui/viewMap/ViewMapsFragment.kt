@@ -1,76 +1,72 @@
-//package ie.wit.caa.ui.viewMap
-//
-//import androidx.fragment.app.Fragment
-//
-//import android.os.Bundle
-//import android.view.LayoutInflater
-//import android.view.View
-//import android.view.ViewGroup
-//
-//import com.google.android.gms.maps.CameraUpdateFactory
-//import com.google.android.gms.maps.GoogleMap
-//import com.google.android.gms.maps.OnMapReadyCallback
-//import com.google.android.gms.maps.SupportMapFragment
-//import com.google.android.gms.maps.model.CameraPosition
-//import com.google.android.gms.maps.model.LatLng
-//import com.google.android.gms.maps.model.MarkerOptions
-//import ie.wit.caa.R
-//import ie.wit.caa.databinding.FragmentViewMapsBinding
-//import ie.wit.caa.main.caaApp
-//
-//class MapsViewFragment : Fragment(), OnMapReadyCallback {
-//
-//    private var _fragBinding: FragmentViewMapsBinding? = null
-//    private val binding get() = _fragBinding!!
-//
-//    private lateinit var map: GoogleMap
-//
-//    override fun onCreateView(
-//        inflater: LayoutInflater,
-//        container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View {
-//        _fragBinding = FragmentViewMapsBinding.inflate(inflater, container, false)
-//        return binding.root
-//    }
-//
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//
-//        val mapsFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment
-//        mapsFragment.getMapAsync(this)
-//    }
-//
-//    override fun onMapReady(googleMap: GoogleMap) {
-//        map = googleMap
-//
-//        // add markers to the map
-//        for (location in caaApp.locations) {
-//            val marker = map.addMarker(
-//                MarkerOptions()
-//                    .position(LatLng(location.lat, location.lng))
-//                    .title(location.title)
-//            )
-//
-//            // set the marker's snippet to the location's description
-//            if (marker != null) {
-//                marker.snippet = location.description
-//            }
-//        }
-//
-//        // move the camera to the first location in the list
-//        if (caaApp.locations.isNotEmpty()) {
-//            val firstLocation = caaApp.locations.first()
-//            val cameraPosition = CameraPosition.Builder()
-//                .target(LatLng(firstLocation.lat, firstLocation.lng))
-//                .zoom(firstLocation.zoom)
-//                .build()
-//            map.moveCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
-//        }
-//    }
-//
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        _fragBinding = null
-//    }
-//}
+package ie.wit.caa.ui.viewMap
+
+import androidx.fragment.app.Fragment
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
+import com.google.android.gms.maps.model.MarkerOptions
+import com.squareup.picasso.Picasso
+import ie.wit.caa.databinding.FragmentViewMapsBinding
+import ie.wit.caa.main.caaApp
+import ie.wit.caa.models.CaaJSONStore
+import ie.wit.caa.models.CaaModel
+
+class ViewMapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
+    private lateinit var binding: FragmentViewMapsBinding
+    lateinit var map: GoogleMap
+    lateinit var app: caaApp
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentViewMapsBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        app = activity?.application as caaApp
+        val mapFragment =
+            childFragmentManager.findFragmentById(binding.mapView.id) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+    }
+
+    override fun onMapReady(googleMap: GoogleMap) {
+        map = googleMap
+        configureMap()
+    }
+
+    private fun configureMap() {
+        map.uiSettings.isZoomControlsEnabled = true
+        app.caas.findAll().forEach {
+            val loc = LatLng(it.lat, it.lng)
+            val options = MarkerOptions().title(it.name).position(loc)
+            map.addMarker(options)?.tag = it.id
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(loc, it.zoom))
+            map.setOnMarkerClickListener(this)
+        }
+    }
+
+    override fun onMarkerClick(marker: Marker): Boolean {
+        val foundCaa: CaaModel? = CaaJSONStore.caas.find { it.id == marker.tag }
+        return false
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        val f = childFragmentManager.findFragmentById(binding.mapView.id)
+        if (f != null) {
+            childFragmentManager.beginTransaction().remove(f).commit()
+        }
+    }
+}

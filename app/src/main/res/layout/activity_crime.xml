@@ -62,8 +62,7 @@
             android:layout_marginTop="17dp"
             android:layout_toEndOf="@+id/imageIcon"
             android:text="@{Integer.toString(caa.level)}"
-            android:textSize="24sp"
-            tools:text="10" />
+            android:textSize="24sp" />
 
     </RelativeLayout>
 </androidx.cardview.widget.CardView>

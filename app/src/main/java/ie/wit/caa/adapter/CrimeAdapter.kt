@@ -14,29 +14,32 @@ interface ReportClickListener {
 class CrimeAdapter constructor(private var caas: List<CaaModel>,private val listener: ReportClickListener)
         : RecyclerView.Adapter<CrimeAdapter.MainHolder>() {
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
-            val binding = ActivityCrimeBinding
-                .inflate(LayoutInflater.from(parent.context), parent, false)
 
-            return MainHolder(binding)
-        }
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MainHolder {
+        val binding = ActivityCrimeBinding
+            .inflate(LayoutInflater.from(parent.context), parent, false)
 
-        override fun onBindViewHolder(holder: MainHolder, position: Int) {
-            val caa = caas[holder.adapterPosition]
-            holder.bind(caa,listener)
-        }
+        return MainHolder(binding)
+    }
 
-        override fun getItemCount(): Int = caas.size
+    override fun onBindViewHolder(holder: MainHolder, position: Int) {
+        val caa = caas[holder.adapterPosition]
+        holder.bind(caa, listener)
+    }
 
-        inner class MainHolder(val binding : ActivityCrimeBinding) : RecyclerView.ViewHolder(binding.root) {
+    override fun getItemCount(): Int = caas.size
 
-            fun bind(caa: CaaModel, listener: ReportClickListener) {
-               // binding.FullName.text = caa.name
-               // binding.name.setText(caa.name)
-                binding.caa = caa
-                binding.imageIcon.setImageResource(R.mipmap.ic_launcher_round)
-                binding.root.setOnClickListener { listener.onReportClick(caa) }
-                binding.executePendingBindings()
-            }
+    inner class MainHolder(val binding: ActivityCrimeBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bind(caa: CaaModel, listener: ReportClickListener) {
+            binding.FullName.text = caa.name
+            binding.Type.text = caa.type
+//            binding.dangerlvl.text = caa?.level.toString()
+            binding.caa = caa
+            binding.imageIcon.setImageResource(R.mipmap.ic_launcher_round)
+            binding.root.setOnClickListener { listener.onReportClick(caa) }
+            binding.executePendingBindings()
         }
     }
+}

@@ -84,5 +84,20 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerDragListe
             _fragBinding = null
         }
 
+    override fun onResume() {
+        super.onResume()
+        if(this::map.isInitialized) {
+            map.setOnMarkerClickListener(this)
+            map.setOnMarkerDragListener(this)
+        }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if(this::map.isInitialized) {
+            map.setOnMarkerClickListener(null)
+            map.setOnMarkerDragListener(null)
+        }
+    }
 
 }
