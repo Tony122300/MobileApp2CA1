@@ -65,8 +65,5 @@ class ViewMapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClick
     override fun onDestroyView() {
         super.onDestroyView()
         val f = childFragmentManager.findFragmentById(binding.mapView.id)
-        if (f != null) {
-            childFragmentManager.beginTransaction().remove(f).commit()
-        }
     }
 }

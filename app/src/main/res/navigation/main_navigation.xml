@@ -18,6 +18,9 @@
         <action
             android:id="@+id/action_reportCrimeActivityFragment_to_mapsFragment"
             app:destination="@id/mapsFragment" />
+        <action
+            android:id="@+id/action_reportCrimeActivityFragment_to_viewMapsFragment"
+            app:destination="@id/viewMapsFragment" />
     </fragment>
     <fragment
         android:id="@+id/listFragment"
@@ -32,6 +35,9 @@
         <action
             android:id="@+id/action_listFragment_to_reportDetailsFragment"
             app:destination="@id/reportDetailsFragment" />
+        <action
+            android:id="@+id/action_listFragment_to_viewMapsFragment"
+            app:destination="@id/viewMapsFragment" />
     </fragment>
     <fragment
         android:id="@+id/reportDetailsFragment"
@@ -58,5 +64,12 @@
         android:id="@+id/viewMapsFragment"
         android:name="ie.wit.caa.ui.viewMap.ViewMapsFragment"
         android:label="fragment_view_maps"
-        tools:layout="@layout/fragment_view_maps" />
+        tools:layout="@layout/fragment_view_maps" >
+        <action
+            android:id="@+id/action_viewMapsFragment_to_reportCrimeActivityFragment"
+            app:destination="@id/reportCrimeActivityFragment" />
+        <action
+            android:id="@+id/action_viewMapsFragment_to_listFragment"
+            app:destination="@id/listFragment" />
+    </fragment>
 </navigation>
