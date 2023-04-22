@@ -45,7 +45,11 @@
 //        caas.remove(caa)
 //    }
 //
-//        fun logAll() {
+//    override fun findByName(name: String): CaaModel? {
+//        TODO("Not yet implemented")
+//    }
+//
+//    fun logAll() {
 //            Timber.v("** crime/accident List **")
 //            caas.forEach { Timber.v("crime/accident ${it}") }
 //        }
