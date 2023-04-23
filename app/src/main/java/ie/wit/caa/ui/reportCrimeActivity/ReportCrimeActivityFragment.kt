@@ -7,19 +7,24 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import android.widget.*
+import androidx.activity.result.ActivityResult
 import androidx.fragment.app.Fragment
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.NavigationUI
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 import ie.wit.caa.databinding.FragmentReportCrimeActivityBinding
 import ie.wit.caa.main.caaApp
 import ie.wit.caa.models.CaaModel
 import ie.wit.caa.models.Location
+import ie.wit.caa.ui.auth.LoggedInViewModel
 import timber.log.Timber.i
 import java.util.*
 
@@ -30,6 +35,8 @@ class ReportCrimeActivityFragment : Fragment() {
     private var _fragBinding: FragmentReportCrimeActivityBinding? = null
     private val fragBinding get() = _fragBinding!!
     private lateinit var reportCrimeActivityViewModel: ReportCrimeActivityViewModel
+    private val loggedInViewModel: LoggedInViewModel by activityViewModels()
+    // Write a message to the database
     private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
     private val choices = arrayOf(
         "Drug",
@@ -46,12 +53,10 @@ class ReportCrimeActivityFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         caaApp = CaaModel()
-
         app = activity?.application as caaApp
-        //app = activity?.application as caaApp
         setHasOptionsMenu(true)
-
     }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -59,8 +64,7 @@ class ReportCrimeActivityFragment : Fragment() {
         _fragBinding = FragmentReportCrimeActivityBinding.inflate(inflater, container, false)
         val root = fragBinding.root
         activity?.title = getString(ie.wit.caa.R.string.action_crime)
-        reportCrimeActivityViewModel =
-            ViewModelProvider(this).get(ReportCrimeActivityViewModel::class.java)
+        reportCrimeActivityViewModel = ViewModelProvider(this).get(ReportCrimeActivityViewModel::class.java)
         reportCrimeActivityViewModel.observableStatus.observe(
             viewLifecycleOwner,
             Observer { status ->
@@ -158,7 +162,6 @@ class ReportCrimeActivityFragment : Fragment() {
     }
 
 
-
     fun setButtonListener(layout: FragmentReportCrimeActivityBinding) {
         layout.addCrime.setOnClickListener {
             val datePicker = fragBinding.datePicker
@@ -170,23 +173,19 @@ class ReportCrimeActivityFragment : Fragment() {
             val date = "${datePicker.dayOfMonth}/${datePicker.month + 1}/${datePicker.year}"
             val time = "${timePicker.hour}:${timePicker.minute}"
             if (name.isNotEmpty() && description.isNotEmpty()) {
-                val crime = CaaModel(
-                    name = name,
-                    description = description,
-                    type = crimeType,
-                    level = crimeLevel,
-                    date = date,
-                    time = time,
-                    lat = app.loc.lat,
-                    lng = app.loc.lng,
-                    zoom = app.loc.zoom
-                )
+                reportCrimeActivityViewModel.addCrime(loggedInViewModel.liveFirebaseUser, CaaModel(name = name,
+                    description=description,
+                    type=crimeType,
+                    level=crimeLevel ,
+                    date=date,
+                    time=time,
+                    lat=app.loc.lat,lng=app.loc.lng,zoom=app.loc.zoom,
+                    email = loggedInViewModel.liveFirebaseUser.value?.email!!))
                // app.crimeStore.create(crime)
                 Snackbar.make(fragBinding.root, "Crime added successfully", Snackbar.LENGTH_LONG)
                     .show()
                 fragBinding.FullName.setText("")
                 fragBinding.Description.setText("")
-                reportCrimeActivityViewModel.addCrime(crime)
             } else {
                 Toast.makeText(
                     requireContext(),
@@ -200,6 +199,7 @@ class ReportCrimeActivityFragment : Fragment() {
     override fun onResume() {
         super.onResume()
     }
+
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(ie.wit.caa.R.menu.menu_caa, menu)
         super.onCreateOptionsMenu(menu, inflater)

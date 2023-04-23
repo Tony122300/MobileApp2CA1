@@ -11,7 +11,7 @@ import ie.wit.caa.databinding.ActivityCrimeBinding
 interface ReportClickListener {
     fun onReportClick(caa: CaaModel)
 }
-class CrimeAdapter constructor(private var caas: List<CaaModel>,private val listener: ReportClickListener)
+class CrimeAdapter constructor(private var caas: ArrayList<CaaModel>,private val listener: ReportClickListener)
         : RecyclerView.Adapter<CrimeAdapter.MainHolder>() {
 
 
@@ -26,6 +26,10 @@ class CrimeAdapter constructor(private var caas: List<CaaModel>,private val list
         val caa = caas[holder.adapterPosition]
         holder.bind(caa, listener)
     }
+    fun removeAt(position: Int) {
+        caas.removeAt(position)
+        notifyItemRemoved(position)
+    }
 
     override fun getItemCount(): Int = caas.size
 
@@ -35,7 +39,7 @@ class CrimeAdapter constructor(private var caas: List<CaaModel>,private val list
         fun bind(caa: CaaModel, listener: ReportClickListener) {
             binding.FullName.text = caa.name
             binding.Type.text = caa.type
-//            binding.dangerlvl.text = caa?.level.toString()
+            binding.root.tag = caa
             binding.caa = caa
             binding.imageIcon.setImageResource(R.mipmap.ic_launcher_round)
             binding.root.setOnClickListener { listener.onReportClick(caa) }
