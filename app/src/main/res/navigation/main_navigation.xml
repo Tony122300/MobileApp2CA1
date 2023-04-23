@@ -52,7 +52,7 @@
         tools:layout="@layout/fragment_report_details" >
         <argument
             android:name="crimeid"
-            app:argType="long" />
+            app:argType="string" />
         <action
             android:id="@+id/action_reportDetailsFragment_to_listFragment"
             app:destination="@id/listFragment"
