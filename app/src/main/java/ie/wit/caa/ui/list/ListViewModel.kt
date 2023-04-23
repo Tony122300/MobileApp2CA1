@@ -3,14 +3,20 @@ package ie.wit.caa.ui.list
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import ie.wit.caa.models.CaaJSONStore
+import com.google.firebase.auth.FirebaseUser
+import ie.wit.caa.firebase.FirebaseDBManager
+//import ie.wit.caa.firebase.FirebaseDBManager
+//import ie.wit.caa.models.CaaManager
+//import ie.wit.caa.models.CaaManager
 //import ie.wit.caa.models.CaaManager
 import ie.wit.caa.models.CaaModel
 import ie.wit.caa.models.CaaStore
+import timber.log.Timber
+import java.lang.Exception
 
 class ListViewModel : ViewModel() {
 private val caaList = MutableLiveData<List<CaaModel>>()
-
+    var liveFirebaseUser = MutableLiveData<FirebaseUser>()
     val observableCaaList: LiveData<List<CaaModel>>
     get() = caaList
 
@@ -18,21 +24,48 @@ private val caaList = MutableLiveData<List<CaaModel>>()
         load()
     }
 
-    fun load(){
-        caaList.value = CaaJSONStore.findAll()
+//    fun load() {
+//        try {
+//            caaList.value = CaaManager.findAll()
+//            Timber.i("Retrofit Success : ${caaList.value}")
+//        } catch (e: Exception) {
+//            Timber.i("Retrofit Error : ${e.message}")
+//        }
+//    }
+fun load() {
+    try {
+        //DonationManager.findAll(liveFirebaseUser.value?.email!!, donationsList)
+        FirebaseDBManager.findAll(liveFirebaseUser.value?.uid!!,caaList)
+        Timber.i("Report Load Success : ${caaList.value.toString()}")
     }
-
-    fun filterList(query: String) {
-        val results = mutableListOf<CaaModel>()
-
-        for (caa in CaaJSONStore.findAll()) {
-            if (caa.type.contains(query, ignoreCase = true) ||
-                caa.name.contains(query, ignoreCase = true)) {
-                results.add(caa)
-            }
-        }
-
-
-        caaList.value = results
+    catch (e: Exception) {
+        Timber.i("Report Load Error : $e.message")
     }
 }
+
+    fun delete(userid: String, id: String) {
+        try {
+            //DonationManager.delete(userid,id)
+            FirebaseDBManager.delete(userid,id)
+            Timber.i("Report Delete Success")
+        }
+        catch (e: Exception) {
+            Timber.i("Report Delete Error : $e.message")
+        }
+    }
+//
+//    fun filterList(query: String) {
+//        val results = mutableListOf<CaaModel>()
+//
+//        for (caa in CaaManager.findAll()) {
+//            if (caa.type.contains(query, ignoreCase = true) ||
+//                caa.name.contains(query, ignoreCase = true)) {
+//                results.add(caa)
+//            }
+//        }
+//
+//
+//        caaList.value = results
+//    }
+}
+
