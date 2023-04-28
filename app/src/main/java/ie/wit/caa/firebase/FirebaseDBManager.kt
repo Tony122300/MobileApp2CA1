@@ -11,9 +11,27 @@ object FirebaseDBManager : CaaStore {
    var database: DatabaseReference = FirebaseDatabase.getInstance("https://mobileapp2-371501-default-rtdb.europe-west1.firebasedatabase.app/").reference
 
    // ref = Database.database("https://<databaseName><region>.firebasedatabase.app")
-    override fun findAll(caaList: MutableLiveData<List<CaaModel>>) {
-        TODO("Not yet implemented")
-    }
+    override fun findAllInAll(caaList: MutableLiveData<List<CaaModel>>) {
+       database.child("crimes")
+           .addValueEventListener(object : ValueEventListener {
+               override fun onCancelled(error: DatabaseError) {
+                   Timber.i("Firebase CAA error : ${error.message}")
+               }
+
+               override fun onDataChange(snapshot: DataSnapshot) {
+                   val localList = ArrayList<CaaModel>()
+                   val children = snapshot.children
+                   children.forEach {
+                       val caa = it.getValue(CaaModel::class.java)
+                       localList.add(caa!!)
+                   }
+                   database.child("donations")
+                       .removeEventListener(this)
+
+                   caaList.value = localList
+               }
+           })
+   }
 
     override fun findAll(userid: String, caaList: MutableLiveData<List<CaaModel>>) {
         database.child("user-crimes").child(userid)
@@ -81,4 +99,26 @@ object FirebaseDBManager : CaaStore {
     override fun findByName(name: String): CaaModel? {
         TODO("Not yet implemented")
     }
+
+    fun updateImageRef(userid: String,imageUri: String) {
+
+        val userCrimes = database.child("user-crimes").child(userid)
+        val allCrimes = database.child("crimes")
+
+        userCrimes.addListenerForSingleValueEvent(
+            object : ValueEventListener {
+                override fun onCancelled(error: DatabaseError) {}
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    snapshot.children.forEach {
+                        //Update Users imageUri
+                        it.ref.child("profilepic").setValue(imageUri)
+                        //Update all donations that match 'it'
+                        val caa = it.getValue(CaaModel::class.java)
+                        allCrimes.child(caa!!.uid!!)
+                            .child("profilepic").setValue(imageUri)
+                    }
+                }
+            })
+    }
+
 }

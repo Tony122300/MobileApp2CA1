@@ -16,6 +16,7 @@ import java.lang.Exception
 
 class ListViewModel : ViewModel() {
 private val caaList = MutableLiveData<List<CaaModel>>()
+    var readOnly = MutableLiveData(false)
     var liveFirebaseUser = MutableLiveData<FirebaseUser>()
     val observableCaaList: LiveData<List<CaaModel>>
     get() = caaList
@@ -34,7 +35,7 @@ private val caaList = MutableLiveData<List<CaaModel>>()
 //    }
 fun load() {
     try {
-        //DonationManager.findAll(liveFirebaseUser.value?.email!!, donationsList)
+        readOnly.value = false
         FirebaseDBManager.findAll(liveFirebaseUser.value?.uid!!,caaList)
         Timber.i("Report Load Success : ${caaList.value.toString()}")
     }
@@ -42,10 +43,19 @@ fun load() {
         Timber.i("Report Load Error : $e.message")
     }
 }
+    fun loadAll() {
+        try {
+            readOnly.value = true
+            FirebaseDBManager.findAllInAll(caaList)
+            Timber.i("Crime LoadAll Success : ${caaList.value.toString()}")
+        }
+        catch (e: Exception) {
+            Timber.i("Crime LoadAll Error : $e.message")
+        }
+    }
 
     fun delete(userid: String, id: String) {
         try {
-            //DonationManager.delete(userid,id)
             FirebaseDBManager.delete(userid,id)
             Timber.i("Report Delete Success")
         }

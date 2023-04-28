@@ -20,6 +20,7 @@
     <string name="nav_header_desc">Navigation header</string>
     <string name="no_crimes">No Crimes/Accidents, all safe!</string>
     <string name="cant_upload_crime">Error : cant upload crime please try again</string>
+    <string name="select_image">Select Image</string>
 
     <string name="report_details">Report Details</string>
     <string name="crime_name">Crime/Accident:</string>

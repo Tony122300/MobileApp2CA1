@@ -4,8 +4,12 @@ import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
 import android.widget.SearchView
+import androidx.appcompat.widget.SwitchCompat
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.Navigation.findNavController
@@ -33,6 +37,7 @@ class ListFragment : Fragment(), ReportClickListener {
     private val fragBinding get() = _fragBinding!!
     private lateinit var listViewModel: ListViewModel
     private val loggedInViewModel : LoggedInViewModel by activityViewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         app = activity?.application as caaApp
@@ -45,7 +50,7 @@ class ListFragment : Fragment(), ReportClickListener {
     ): View? {
         _fragBinding = FragmentListBinding.inflate(inflater, container, false)
         val root = fragBinding.root
-
+        setupMenu()
         fragBinding.recyclerView.layoutManager = LinearLayoutManager(activity)
 
         listViewModel = ViewModelProvider(this).get(ListViewModel::class.java)
@@ -104,15 +109,36 @@ class ListFragment : Fragment(), ReportClickListener {
         val searchView = view.findViewById<SearchView>(R.id.searchView)
 
     }
+    private fun setupMenu() {
+        (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
+            override fun onPrepareMenu(menu: Menu) {
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return NavigationUI.onNavDestinationSelected(item,
-            requireView().findNavController()) || super.onOptionsItemSelected(item)
+            }
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.menu_list, menu)
+
+                val item = menu.findItem(R.id.toggleCrimes) as MenuItem
+                item.setActionView(R.layout.togglebutton_layout)
+                val toggleCrimes: SwitchCompat =
+                    item.actionView!!.findViewById(R.id.toggleButton)
+                toggleCrimes.isChecked = false
+
+                toggleCrimes.setOnCheckedChangeListener { _, isChecked ->
+                    if (isChecked) listViewModel.loadAll()
+                    else listViewModel.load()
+                }
+            }
+            override fun onMenuItemSelected(item: MenuItem): Boolean {
+            return NavigationUI.onNavDestinationSelected(
+                item, requireView().findNavController())
+        }
+    }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
 
     private fun render(caaList: ArrayList<CaaModel>) {
-        fragBinding.recyclerView.adapter = CrimeAdapter(caaList,this)
+        fragBinding.recyclerView.adapter = CrimeAdapter(caaList,this,listViewModel.readOnly.value!!)
+        listViewModel.readOnly.value!!
         if (caaList.isEmpty()) {
             fragBinding.recyclerView.visibility = View.GONE
             fragBinding.noCrimes.visibility = View.VISIBLE
@@ -124,12 +150,16 @@ class ListFragment : Fragment(), ReportClickListener {
     private fun setSwipeRefresh() {
         fragBinding.swiperefresh.setOnRefreshListener {
             fragBinding.swiperefresh.isRefreshing = true
+            if(listViewModel.readOnly.value!!)
+                listViewModel.loadAll()
+            else
             listViewModel.load()
         }
     }
     override fun onReportClick(caa: CaaModel) {
         val action = ListFragmentDirections.actionListFragmentToReportDetailsFragment(caa.uid!!)
-       findNavController().navigate(action)
+       if(!listViewModel.readOnly.value!!)
+        findNavController().navigate(action)
     }
     override fun onResume() {
         super.onResume()

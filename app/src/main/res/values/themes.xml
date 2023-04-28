@@ -28,5 +28,9 @@
     </style>
     <style name="Theme.CAA.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
     <style name="Theme.CAA.PopupOverlay" parent="Theme.AppCompat.Light"/>
+    <style name="toggleStyle">
+        <item name="colorControlActivated">@color/colorWhite</item>
+        <item name="colorControlHighlight">@color/black</item>
+    </style>
 
 </resources>

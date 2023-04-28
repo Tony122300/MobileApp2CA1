@@ -39,7 +39,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/imageIcon"
-            android:text="@string/type"
+            android:text="@{caa.type}"
             android:textSize="24sp" />
 
         <TextView
@@ -50,7 +50,7 @@
             android:layout_marginStart="30dp"
             android:layout_marginTop="5dp"
             android:layout_toEndOf="@+id/Type"
-            android:text="@string/fullName"
+            android:text="@{caa.name}"
             android:textSize="24sp" />
 
         <TextView

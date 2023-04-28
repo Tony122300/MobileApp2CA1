@@ -14,10 +14,10 @@ data class CaaModel(
     var level: Int = 0,
     var date: String = "",
     var time: String = "",
+    var profilepic: String = "",
     var lat: Double = 0.0,
     var lng: Double = 0.0,
     var zoom: Float = 0f,
-    var message: String = "n/a",
     var email: String? = "tony@gmail.com") : Parcelable
 {
     @Exclude
@@ -30,7 +30,7 @@ data class CaaModel(
             "level" to level,
             "date" to date,
             "time" to time,
-            "message" to message,
+            "profilepic" to profilepic,
             "email" to email
         )
     }

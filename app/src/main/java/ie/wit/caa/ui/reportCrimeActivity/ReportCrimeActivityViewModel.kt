@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.firebase.auth.FirebaseUser
 import ie.wit.caa.firebase.FirebaseDBManager
+import ie.wit.caa.firebase.FirebaseImageManager
 //import ie.wit.caa.firebase.FirebaseDBManager
 //import ie.wit.caa.models.CaaManager
 //import ie.wit.caa.models.CaaJSONStore
@@ -32,6 +33,7 @@ class ReportCrimeActivityViewModel : ViewModel() {
     fun addCrime(firebaseUser: MutableLiveData<FirebaseUser>, caa: CaaModel) {
         Timber.i("Attempting to add crime: $caa")
         status.value = try {
+            caa.profilepic = FirebaseImageManager.imageUri.value.toString()
             FirebaseDBManager.create(firebaseUser, caa)
             true
         } catch (e: IllegalArgumentException) {
