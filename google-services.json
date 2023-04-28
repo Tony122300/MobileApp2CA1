@@ -15,15 +15,7 @@
       },
       "oauth_client": [
         {
-          "client_id": "860666399952-22nm4pv620qsgda1qr5th14llvqinkql.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.example.busapp2",
-            "certificate_hash": "fb36d6705260cd287e96e4cfdafa74fc55f01568"
-          }
-        },
-        {
-          "client_id": "860666399952-744okmusqb31d6815693ojgj21oe3vv6.apps.googleusercontent.com",
+          "client_id": "860666399952-3njm3p5r6gou66tq1i92epgkvqdskmv4.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -36,7 +28,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "860666399952-744okmusqb31d6815693ojgj21oe3vv6.apps.googleusercontent.com",
+              "client_id": "860666399952-3njm3p5r6gou66tq1i92epgkvqdskmv4.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -52,7 +44,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "860666399952-744okmusqb31d6815693ojgj21oe3vv6.apps.googleusercontent.com",
+          "client_id": "860666399952-beunjtn034m865riucit48d1dgd1dg19.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ie.wit.caa",
+            "certificate_hash": "fb36d6705260cd287e96e4cfdafa74fc55f01568"
+          }
+        },
+        {
+          "client_id": "860666399952-3njm3p5r6gou66tq1i92epgkvqdskmv4.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -65,7 +65,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "860666399952-744okmusqb31d6815693ojgj21oe3vv6.apps.googleusercontent.com",
+              "client_id": "860666399952-3njm3p5r6gou66tq1i92epgkvqdskmv4.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

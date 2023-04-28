@@ -7,11 +7,9 @@
     android:weightSum="4">
 
 
-
-
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="499dp"
         android:layout_weight="1"
         android:gravity="center_vertical">
 
@@ -67,6 +65,20 @@
                 android:text="@string/create_account"
                 android:theme="@style/ThemeOverlay.MyDarkButton" />
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/emailPasswordButtons"
+            android:orientation="horizontal"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp">
+
+            <com.google.android.gms.common.SignInButton
+                android:id="@+id/googleSignInButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
 
         <LinearLayout
             android:id="@+id/signedInButtons"
@@ -100,5 +112,5 @@
         </LinearLayout>
 
     </RelativeLayout>
-
 </LinearLayout>
+

@@ -19,7 +19,7 @@ object FirebaseDBManager : CaaStore {
         database.child("user-crimes").child(userid)
             .addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
-                    Timber.i("Firebase Donation error : ${error.message}")
+                    Timber.i("Firebase CAA error : ${error.message}")
                 }
 
                 override fun onDataChange(snapshot: DataSnapshot) {
