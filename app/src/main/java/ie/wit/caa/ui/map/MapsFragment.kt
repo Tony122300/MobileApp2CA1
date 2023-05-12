@@ -133,6 +133,7 @@ class MapsFragment : Fragment() {
     private val loggedInViewModel : LoggedInViewModel by activityViewModels()
 
     @SuppressLint("MissingPermission")
+    //calling this when using map calls the render to display the markers.
     private val callback = OnMapReadyCallback { googleMap ->
         mapsViewModel.map = googleMap
         mapsViewModel.map.isMyLocationEnabled = true
@@ -173,8 +174,9 @@ class MapsFragment : Fragment() {
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(callback)
     }
-
+// renders the markers and cricles for the radius of the crime
     private fun render(caaList: ArrayList<CaaModel>) {
+    //colors of each level
         val levelColors = arrayOf(
             Color.argb(70, 0, 255, 0), // level 1 (green)
             Color.argb(70, 128, 255, 0), // level 2
@@ -213,6 +215,7 @@ class MapsFragment : Fragment() {
                         .fillColor(radiusColor)
                 )
             }
+            // calling the checkdangerareas
             mapsViewModel.checkDangerAreas(caaList, mapsViewModel.currentLocation.value!!)
         }
     }
@@ -226,6 +229,8 @@ class MapsFragment : Fragment() {
             listViewModel.load()
         }        }
     }
+
+
     private fun setupMenu() {
         (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
             override fun onPrepareMenu(menu: Menu) {

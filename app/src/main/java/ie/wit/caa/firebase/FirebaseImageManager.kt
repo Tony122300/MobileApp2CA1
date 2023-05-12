@@ -63,7 +63,7 @@ object FirebaseImageManager {
             }
         }
     }
-
+// updating user image
     fun updateUserImage(userid: String, imageUri : Uri?, imageView: ImageView, updating : Boolean) {
         Picasso.get().load(imageUri)
             .resize(200, 200)
@@ -87,7 +87,7 @@ object FirebaseImageManager {
                 override fun onPrepareLoad(placeHolderDrawable: Drawable?) {}
             })
     }
-
+//loads a defualt image and uploads it to firebase
     fun updateDefaultImage(userid: String, resource: Int, imageView: ImageView) {
         Picasso.get().load(resource)
             .resize(200, 200)

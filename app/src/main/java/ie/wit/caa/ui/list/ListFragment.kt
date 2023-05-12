@@ -60,7 +60,7 @@ class ListFragment : Fragment(), ReportClickListener {
             caa?.let { render(caa as ArrayList<CaaModel>) }
         })
 
-
+// fab to redirect to the add crime
         val fab: FloatingActionButton = fragBinding.fab
         fab.setOnClickListener {
             val action = ListFragmentDirections.actionListFragmentToReportCrimeActivityFragment()
@@ -68,7 +68,7 @@ class ListFragment : Fragment(), ReportClickListener {
         }
 
         setSwipeRefresh()
-
+//swipe to delete
         val swipeDeleteHandler = object : SwipeToDeleteCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val adapter = fragBinding.recyclerView.adapter as CrimeAdapter
@@ -78,9 +78,10 @@ class ListFragment : Fragment(), ReportClickListener {
 
             }
         }
+
         val itemTouchDeleteHelper = ItemTouchHelper(swipeDeleteHandler)
         itemTouchDeleteHelper.attachToRecyclerView(fragBinding.recyclerView)
-
+//swipe to edit
         val swipeEditHandler = object : SwipeToEditCallback(requireContext()) {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 onReportClick(viewHolder.itemView.tag as CaaModel)
@@ -109,12 +110,27 @@ class ListFragment : Fragment(), ReportClickListener {
         super.onViewCreated(view, savedInstanceState)
         val searchView = view.findViewById<SearchView>(R.id.searchView)
 
+        // Set up a listener for the search view
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                // No need to handle this here
+                return false
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                // Filter the list based on the new search text
+                listViewModel.filterList(newText ?: "")
+                return true
+            }
+        })
     }
+
     private fun setupMenu() {
         (requireActivity() as MenuHost).addMenuProvider(object : MenuProvider {
             override fun onPrepareMenu(menu: Menu) {
 
             }
+            //inflates layout
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.menu_list, menu)
 
@@ -129,6 +145,7 @@ class ListFragment : Fragment(), ReportClickListener {
                     else listViewModel.load()
                 }
             }
+            // handles the selected menu item and navigates to destination
             override fun onMenuItemSelected(item: MenuItem): Boolean {
             return NavigationUI.onNavDestinationSelected(
                 item, requireView().findNavController())
@@ -136,7 +153,7 @@ class ListFragment : Fragment(), ReportClickListener {
     }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
-
+// sets up adapter of the recyclerview
     private fun render(caaList: ArrayList<CaaModel>) {
         fragBinding.recyclerView.adapter = CrimeAdapter(caaList,this,listViewModel.readOnly.value!!)
         listViewModel.readOnly.value!!
@@ -158,6 +175,7 @@ class ListFragment : Fragment(), ReportClickListener {
             listViewModel.load()
         }
     }
+    // redirect to details page
     override fun onReportClick(caa: CaaModel) {
         val action = ListFragmentDirections.actionListFragmentToReportDetailsFragment(caa.uid!!)
        if(!listViewModel.readOnly.value!!)

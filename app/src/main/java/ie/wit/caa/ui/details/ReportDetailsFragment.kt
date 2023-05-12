@@ -66,7 +66,7 @@ class ReportDetailsFragment : Fragment() {
     ): View? {
         _fragBinding = FragmentReportDetailsBinding.inflate(inflater, container, false)
         val root = fragBinding.root
-
+// initializing variables, finding the views for each in layout
         name = fragBinding.editName
         description = fragBinding.editDecription
         level = fragBinding.editDangerLvl
@@ -77,27 +77,23 @@ class ReportDetailsFragment : Fragment() {
         viewModel = ViewModelProvider(this).get(ReportDetailsViewModel::class.java)
         viewModel.observableCaa.observe(viewLifecycleOwner, Observer { render() })
 
-
+// delete button
         fragBinding.deleteReportButton.setOnClickListener {
             viewModel.delete(loggedInViewModel.liveFirebaseUser.value?.email!!,
                 viewModel.observableCaa.value?.uid!!)
             findNavController().navigateUp()
         }
 
-
+//edit buttion
         fragBinding.editReportButton.setOnClickListener {
             viewModel.updateCaa(loggedInViewModel.liveFirebaseUser.value?.uid!!,
                 args.crimeid, fragBinding.caavm?.observableCaa!!.value!!)
             findNavController().navigateUp()
         }
 
-        fragBinding.deleteReportButton.setOnClickListener {
-            viewModel.delete(loggedInViewModel.liveFirebaseUser.value?.email!!,
-                viewModel.observableCaa.value?.uid!!)
-            findNavController().navigateUp()
-        }
         return root
     }
+    //database reference to get data from database
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         database = FirebaseDatabase.getInstance("https://mobileapp2-371501-default-rtdb.europe-west1.firebasedatabase.app/")
@@ -122,6 +118,7 @@ class ReportDetailsFragment : Fragment() {
         }
         detailRef.addValueEventListener(detailListener)
     }
+
     private fun render() {
         fragBinding.caavm = viewModel
     }

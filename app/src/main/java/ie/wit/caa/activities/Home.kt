@@ -102,7 +102,7 @@ class Home : AppCompatActivity() {
         }
         registerImagePickerCallback()
     }
-
+// nav header
     private fun initNavHeader() {
         Timber.i("CAA Init Nav Header")
         headerView = homeBinding.navView.getHeaderView(0)
@@ -113,7 +113,7 @@ class Home : AppCompatActivity() {
         }
 
     }
-
+// night theme
     fun onThemeSwitchClicked(item: MenuItem) {
         val mode = if (AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES) {
             AppCompatDelegate.MODE_NIGHT_NO
@@ -140,22 +140,28 @@ class Home : AppCompatActivity() {
                     .centerCrop()
                     .into(navHeaderMainBinding.navHeaderImage)
         }
-        else
-            navHeaderMainBinding.navHeaderEmail.text = currentUser.phoneNumber
+        else {
+            Timber.i("caa Loading Existing Default imageUri")
+            FirebaseImageManager.updateDefaultImage(
+                currentUser.uid,
+                R.drawable.logo,
+                navHeaderMainBinding.navHeaderImage
+            )
+        }
     }
 
         override fun onSupportNavigateUp(): Boolean {
             val navController = findNavController(R.id.nav_host_fragment)
             return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
         }
-
+// sign out
     fun signOut(v: MenuItem) {
         loggedInViewModel.signOut()
         FirebaseUIAuthManager.auth.signOut()
         finish()
     }
 
-
+// picking image for changing image on nav header
     private fun registerImagePickerCallback() {
         intentLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -174,6 +180,7 @@ class Home : AppCompatActivity() {
                 }
             }
     }
+// updates location is permission granted if not defualt location
     @SuppressLint("MissingPermission")
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
@@ -188,7 +195,7 @@ class Home : AppCompatActivity() {
         }
         Timber.i("LOC : %s", mapsViewModel.currentLocation.value)
     }
-
+//inflates the menu layout
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.nav_drawer_menu, menu)
         val switchItem = menu.findItem(R.id.theme_switch)

@@ -30,7 +30,7 @@ class Login : AppCompatActivity() {
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+// checks if user is signed in
         registerFirebaseAuthUICallback()
         if(FirebaseUIAuthManager.isSignedIn())
             startActivity(Intent(this, Home::class.java))
@@ -39,13 +39,13 @@ class Login : AppCompatActivity() {
                 FirebaseUIAuthManager
                 .createAndLaunchSignInIntent(R.layout.login))
     }
-
+// setting up authentication callback when users signin
     private fun registerFirebaseAuthUICallback() {
         signIn = registerForActivityResult(
             FirebaseAuthUIActivityResultContract(),
             this::onSignInResult)
     }
-
+// checks if result code is okay meaning signed in. and redirected to home page
     private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
         i(" onSignInResult %s",result.resultCode)
         if (result.resultCode == RESULT_OK) {

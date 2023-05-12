@@ -19,13 +19,14 @@ import timber.log.Timber
 
 @SuppressLint("MissingPermission")
 class MapsViewModel(application: Application) : AndroidViewModel(application) {
-
+//declaring variables map,currentLocation,locationClient,onMapRendered
     lateinit var map : GoogleMap
     var currentLocation = MutableLiveData<Location>()
     var locationClient : FusedLocationProviderClient
     val context = getApplication<Application>().applicationContext
     var onMapRendered: (() -> Unit)? = null
     val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
+            //
         .setWaitForAccurateLocation(false)
         .setMinUpdateIntervalMillis(5000)
         .setMaxUpdateDelayMillis(15000)
@@ -38,12 +39,12 @@ class MapsViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     init {
-
+//request location updates and retrieves it
         locationClient = LocationServices.getFusedLocationProviderClient(application)
         locationClient.requestLocationUpdates(locationRequest, locationCallback,
             Looper.getMainLooper())
     }
-
+//updates location, gets last known location, default location set if cant get location
     fun updateCurrentLocation() {
         if(locationClient.lastLocation.isSuccessful)
             locationClient.lastLocation
@@ -60,7 +61,7 @@ class MapsViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     private val notifiedCaaList = mutableListOf<CaaModel>()
-
+// producing a toast for when the user enters the danger areas that the circle areas. does this by checking if the distance between user and crime is less that the radius created
     fun checkDangerAreas(caaList: List<CaaModel>, userLocation: Location) {
         val toastDuration = Toast.LENGTH_LONG
         caaList.forEach { caa ->

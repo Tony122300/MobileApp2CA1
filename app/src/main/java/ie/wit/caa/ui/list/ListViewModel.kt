@@ -64,6 +64,19 @@ fun load() {
         }
     }
 
+    fun filterList(query: String) {
+        val results = mutableListOf<CaaModel>()
+
+        for (caa in caaList.value ?: emptyList()) {
+            if (caa.type.contains(query, ignoreCase = true) ||
+                caa.name.contains(query, ignoreCase = true)) {
+                results.add(caa)
+            }
+        }
+
+        caaList.value = results
+    }
+
 
 //
 //    fun filterList(query: String) {

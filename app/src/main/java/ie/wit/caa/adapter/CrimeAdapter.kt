@@ -35,7 +35,7 @@ class CrimeAdapter constructor(private var caas: ArrayList<CaaModel>,private val
     }
 
     override fun getItemCount(): Int = caas.size
-
+// bind data from Caamodel to activity crime binding layout
     inner class MainHolder(val binding: ActivityCrimeBinding, private val readOnly: Boolean) :
         RecyclerView.ViewHolder(binding.root) {
         val readOnlyRow = readOnly
