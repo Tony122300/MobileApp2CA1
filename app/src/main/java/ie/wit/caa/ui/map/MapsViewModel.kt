@@ -7,6 +7,7 @@ import android.app.Application
 import android.content.Context
 import android.location.Location
 import android.os.Looper
+import android.widget.Toast
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -58,30 +59,41 @@ class MapsViewModel(application: Application) : AndroidViewModel(application) {
         Timber.i("MAP VM LOC : %s", currentLocation.value)
     }
 
-    fun checkDangerAreas(caaList: List<CaaModel>, userLocation: Location) {
-        onMapRendered = {
-            caaList.forEach { caa ->
-                val distance = FloatArray(1)
-                Location.distanceBetween(
-                    userLocation.latitude,
-                    userLocation.longitude,
-                    caa.latitude,
-                    caa.longitude,
-                    distance
-                )
-                if (distance[0] <= caa.level * 100) {
-                    // Show popup message for danger area
-                    val alertDialog = AlertDialog.Builder(context)
-                        .setTitle("Danger Area Alert")
-                        .setMessage("You are in a dangerous area: ${caa.name}")
-                        .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
-                        .create()
+    private val notifiedCaaList = mutableListOf<CaaModel>()
 
-                    alertDialog.show()
-                }
+    fun checkDangerAreas(caaList: List<CaaModel>, userLocation: Location) {
+        val toastDuration = Toast.LENGTH_LONG
+        caaList.forEach { caa ->
+            val distance = FloatArray(1)
+            Location.distanceBetween(
+                userLocation.latitude,
+                userLocation.longitude,
+                caa.latitude,
+                caa.longitude,
+                distance
+            )
+            val dangerLevel = caa.level
+            val dangerMessage = when (dangerLevel) {
+                1 -> "In a level 1 very low danger area that has: ${caa.type} going on reported by: ${caa.name}"
+                2 -> "In a level 2 low danger area that has: ${caa.type} going on reported by: ${caa.name}"
+                3 -> "In a level 3 moderate danger area that has: ${caa.type} going on reported by: ${caa.name}"
+                4 -> "In a level 4 high danger area that has: ${caa.type} going on reported by: ${caa.name}"
+                5 -> "In a level 5 very high danger area that has: ${caa.type} going on reported by: ${caa.name}"
+                6 -> "In a level 6 extremely high danger area that has: ${caa.type} going on reported by: ${caa.name}"
+                7 -> "In a level 7 extreme danger area that has: ${caa.type} going on reported by: ${caa.name}"
+                8 -> "In a level 8 severe danger area that has: ${caa.type} going on reported by: ${caa.name}"
+                9 -> "In a level 9 very severe danger area that has: ${caa.type} going on reported by: ${caa.name}"
+                else -> "In a level 10 extremely severe danger area that has: ${caa.type} going on reported by: ${caa.name}"
+            }
+            if (distance[0] <= dangerLevel * 100 && caa !in notifiedCaaList) {
+                // Show toast message for danger area
+                Toast.makeText(context, dangerMessage, toastDuration).show()
+                notifiedCaaList.add(caa)
+            } else if (distance[0] > dangerLevel * 100 && caa in notifiedCaaList) {
+                // Remove from notified list if user exits danger area
+                notifiedCaaList.remove(caa)
             }
         }
     }
-
 
 }
