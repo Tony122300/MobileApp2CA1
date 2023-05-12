@@ -10,6 +10,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract
+import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
@@ -17,126 +19,53 @@ import com.google.android.material.snackbar.Snackbar
 import ie.wit.caa.R
 import ie.wit.caa.activities.Home
 import ie.wit.caa.databinding.LoginBinding
+import ie.wit.caa.firebaseui.FirebaseUIAuthManager
 
 import timber.log.Timber
+import timber.log.Timber.i
 
 class Login : AppCompatActivity() {
 
-    private lateinit var loginRegisterViewModel : LoginRegisterViewModel
-    private lateinit var loginBinding : LoginBinding
-    private lateinit var startForResult : ActivityResultLauncher<Intent>
+    private lateinit var signIn: ActivityResultLauncher<Intent>
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        loginBinding = LoginBinding.inflate(layoutInflater)
-        setContentView(loginBinding.root)
 
-        loginBinding.emailSignInButton.setOnClickListener {
-            signIn(loginBinding.fieldEmail.text.toString(),
-                loginBinding.fieldPassword.text.toString())
-        }
-        loginBinding.emailCreateAccountButton.setOnClickListener {
-            createAccount(loginBinding.fieldEmail.text.toString(),
-                loginBinding.fieldPassword.text.toString())
-        }
-        loginBinding.googleSignInButton.setOnClickListener { googleSignIn() }
-        loginBinding.googleSignInButton.setSize(SignInButton.SIZE_WIDE)
-        loginBinding.googleSignInButton.setColorScheme(0)
-
+        registerFirebaseAuthUICallback()
+        if(FirebaseUIAuthManager.isSignedIn())
+            startActivity(Intent(this, Home::class.java))
+        else
+            signIn.launch(
+                FirebaseUIAuthManager
+                .createAndLaunchSignInIntent(R.layout.login))
     }
 
-    public override fun onStart() {
-        super.onStart()
-        loginRegisterViewModel = ViewModelProvider(this).get(LoginRegisterViewModel::class.java)
-        loginRegisterViewModel.liveFirebaseUser.observe(this, Observer
-        { firebaseUser -> if (firebaseUser != null)
-            startActivity(Intent(this, Home::class.java)) })
-
-        loginRegisterViewModel.firebaseAuthManager.errorStatus.observe(this, Observer
-        { status -> checkStatus(status) })
-
-        setupGoogleSignInCallback()
+    private fun registerFirebaseAuthUICallback() {
+        signIn = registerForActivityResult(
+            FirebaseAuthUIActivityResultContract(),
+            this::onSignInResult)
     }
 
-    //Required to exit app from Login Screen - must investigate this further
+    private fun onSignInResult(result: FirebaseAuthUIAuthenticationResult) {
+        i(" onSignInResult %s",result.resultCode)
+        if (result.resultCode == RESULT_OK) {
+            i( "Signin successful!")
+            startActivity(Intent(this,Home::class.java))
+        }
+        else if (result.resultCode == 0) finish()
+        else if (result.idpResponse == null) {
+            i(" Back Button")
+
+            Toast.makeText(this,"Click again to Close App...",
+                Toast.LENGTH_LONG).show()
+        }
+        else i(result.idpResponse!!.error)
+    }
+
+
     override fun onBackPressed() {
-        super.onBackPressed()
         Toast.makeText(this,"Click again to Close App...",Toast.LENGTH_LONG).show()
         finish()
+        super.onBackPressed()
     }
-
-    private fun createAccount(email: String, password: String) {
-        Timber.d("createAccount:$email")
-        if (!validateForm()) { return }
-
-        loginRegisterViewModel.register(email,password)
-    }
-
-    private fun signIn(email: String, password: String) {
-        Timber.d("signIn:$email")
-        if (!validateForm()) { return }
-
-        loginRegisterViewModel.login(email,password)
-    }
-
-    private fun checkStatus(error:Boolean) {
-        if (error)
-            Toast.makeText(this,
-                getString(R.string.auth_failed),
-                Toast.LENGTH_LONG).show()
-    }
-
-    private fun validateForm(): Boolean {
-        var valid = true
-
-        val email = loginBinding.fieldEmail.text.toString()
-        if (TextUtils.isEmpty(email)) {
-            loginBinding.fieldEmail.error = "Required."
-            valid = false
-        } else {
-            loginBinding.fieldEmail.error = null
-        }
-
-        val password = loginBinding.fieldPassword.text.toString()
-        if (TextUtils.isEmpty(password)) {
-            loginBinding.fieldPassword.error = "Required."
-            valid = false
-        } else {
-            loginBinding.fieldPassword.error = null
-        }
-        return valid
-    }
-
-    private fun googleSignIn() {
-        val signInIntent = loginRegisterViewModel.firebaseAuthManager
-            .googleSignInClient.value!!.signInIntent
-
-        startForResult.launch(signInIntent)
-    }
-
-    private fun setupGoogleSignInCallback() {
-        startForResult =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                when(result.resultCode){
-                    RESULT_OK -> {
-                        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
-                        try {
-                            // Google Sign In was successful, authenticate with Firebase
-                            val account = task.getResult(ApiException::class.java)
-                            loginRegisterViewModel.authWithGoogle(account!!)
-                        } catch (e: ApiException) {
-                            // Google Sign In failed
-                            Timber.i( "Google sign in failed $e")
-                            Snackbar.make(loginBinding.loginLayout, "Authentication Failed.",
-                                Snackbar.LENGTH_SHORT).show()
-                        }
-                        Timber.i("DonationX Google Result $result.data")
-                    }
-                    RESULT_CANCELED -> {
-
-                    } else -> { }
-                }
-            }
-    }
-
 }

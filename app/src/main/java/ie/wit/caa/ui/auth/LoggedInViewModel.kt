@@ -8,11 +8,12 @@ import ie.wit.caa.firebase.FirebaseAuthManager
 
 class LoggedInViewModel(app: Application) : AndroidViewModel(app) {
 
-    var firebaseAuthManager : FirebaseAuthManager = FirebaseAuthManager(app)
-    var liveFirebaseUser : MutableLiveData<FirebaseUser> = firebaseAuthManager.liveFirebaseUser
-    var loggedOut : MutableLiveData<Boolean> = firebaseAuthManager.loggedOut
+    var liveFirebaseUser = MutableLiveData<FirebaseUser>()
+    var loggedOut = MutableLiveData<Boolean>()
+    var errorStatus = MutableLiveData<Boolean>()
 
-    fun logOut() {
-        firebaseAuthManager.logOut()
+    fun signOut() {
+        loggedOut.postValue(true)
+        errorStatus.postValue(false)
     }
 }

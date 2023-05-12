@@ -93,12 +93,39 @@ object FirebaseDBManager : CaaStore {
     }
 
     override fun update(userid: String, caaid: String, caa: CaaModel) {
+        val caaValues = caa.toMap()
 
+        val childUpdate : MutableMap<String, Any?> = HashMap()
+        childUpdate["crimes/$caaid"] = caaValues
+        childUpdate["user-crimes/$userid/$caaid"] = caaValues
+
+        database.updateChildren(childUpdate)
     }
 
     override fun findByName(name: String): CaaModel? {
-        TODO("Not yet implemented")
+        var foundCaa: CaaModel? = null
+
+        database.child("crimes")
+            .orderByChild("name")
+            .equalTo(name)
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    if (snapshot.exists()) {
+                        for (caaSnapshot in snapshot.children) {
+                            foundCaa = caaSnapshot.getValue(CaaModel::class.java)
+                            break
+                        }
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    Timber.e(error.toException(), "Failed to find crime by name")
+                }
+            })
+
+        return foundCaa
     }
+
 
     fun updateImageRef(userid: String,imageUri: String) {
 

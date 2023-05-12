@@ -17,12 +17,7 @@
             app:exitAnim="@android:anim/slide_out_right" />
         <action
             android:id="@+id/action_reportCrimeActivityFragment_to_mapsFragment"
-            app:destination="@id/mapsFragment" />
-        <action
-            android:id="@+id/action_reportCrimeActivityFragment_to_viewMapsFragment"
-            app:destination="@id/viewMapsFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out" />
+            app:destination="@id/mapsFragment2" />
     </fragment>
     <fragment
         android:id="@+id/listFragment"
@@ -39,11 +34,7 @@
             app:destination="@id/reportDetailsFragment"
             app:enterAnim="@android:anim/slide_in_left"
             app:exitAnim="@android:anim/slide_out_right" />
-        <action
-            android:id="@+id/action_listFragment_to_viewMapsFragment"
-            app:destination="@id/viewMapsFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out" />
+
     </fragment>
     <fragment
         android:id="@+id/reportDetailsFragment"
@@ -59,30 +50,15 @@
             app:enterAnim="@anim/nav_default_pop_enter_anim"
             app:exitAnim="@anim/nav_default_pop_exit_anim" />
     </fragment>
+
     <fragment
-        android:id="@+id/mapsFragment"
-        android:name="ie.wit.caa.ui.map.MapsFragment"
-        android:label="fragment_maps"
-        tools:layout="@layout/fragment_maps" >
-    <argument
-        android:name="location"
-        app:argType="ie.wit.caa.models.Location"  />
-    </fragment>
-    <fragment
-        android:id="@+id/viewMapsFragment"
-        android:name="ie.wit.caa.ui.viewMap.ViewMapsFragment"
-        android:label="fragment_view_maps"
-        tools:layout="@layout/fragment_view_maps" >
+        android:id="@+id/mapsFragment2"
+        android:name="MapsFragment"
+        android:label="fragment_maps2"
+        tools:layout="@layout/fragment_maps2" >
         <action
-            android:id="@+id/action_viewMapsFragment_to_reportCrimeActivityFragment"
-            app:destination="@id/reportCrimeActivityFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out" />
-        <action
-            android:id="@+id/action_viewMapsFragment_to_listFragment"
-            app:destination="@id/listFragment"
-            app:enterAnim="@android:anim/fade_in"
-            app:exitAnim="@android:anim/fade_out" />
+            android:id="@+id/action_mapsFragment2_to_reportDetailsFragment"
+            app:destination="@id/reportDetailsFragment" />
     </fragment>
 
 </navigation>

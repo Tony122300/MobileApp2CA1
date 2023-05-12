@@ -14,10 +14,9 @@ data class CaaModel(
     var level: Int = 0,
     var date: String = "",
     var time: String = "",
+    var latitude: Double = 0.0,
+    var longitude: Double = 0.0,
     var profilepic: String = "",
-    var lat: Double = 0.0,
-    var lng: Double = 0.0,
-    var zoom: Float = 0f,
     var email: String? = "tony@gmail.com") : Parcelable
 {
     @Exclude
@@ -30,12 +29,10 @@ data class CaaModel(
             "level" to level,
             "date" to date,
             "time" to time,
+            "latitude" to latitude,
+            "longitude" to longitude,
             "profilepic" to profilepic,
             "email" to email
         )
     }
 }
-@Parcelize
-data class Location(var lat: Double = 0.0,
-                    var lng: Double = 0.0,
-                    var zoom: Float = 0f) : Parcelable
