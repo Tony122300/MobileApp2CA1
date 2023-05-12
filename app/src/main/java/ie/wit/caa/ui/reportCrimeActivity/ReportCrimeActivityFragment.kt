@@ -23,8 +23,9 @@ import com.google.firebase.ktx.Firebase
 import ie.wit.caa.databinding.FragmentReportCrimeActivityBinding
 import ie.wit.caa.main.caaApp
 import ie.wit.caa.models.CaaModel
-import ie.wit.caa.models.Location
+//import ie.wit.caa.models.Location
 import ie.wit.caa.ui.auth.LoggedInViewModel
+import ie.wit.caa.ui.map.MapsViewModel
 import timber.log.Timber.i
 import java.util.*
 
@@ -36,8 +37,9 @@ class ReportCrimeActivityFragment : Fragment() {
     private val fragBinding get() = _fragBinding!!
     private lateinit var reportCrimeActivityViewModel: ReportCrimeActivityViewModel
     private val loggedInViewModel: LoggedInViewModel by activityViewModels()
+    private val mapsViewModel: MapsViewModel by activityViewModels()
     // Write a message to the database
-    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
+//    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
     private val choices = arrayOf(
         "Drug",
         "Cyber",
@@ -125,23 +127,23 @@ class ReportCrimeActivityFragment : Fragment() {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
         }
        setButtonListener(fragBinding)
-        setMapButtonListener(fragBinding)
+//        setMapButtonListener(fragBinding)
         return root
     }
 
-    fun setMapButtonListener(layout: FragmentReportCrimeActivityBinding) {
-        layout.crimeLocation.setOnClickListener {
-            val location1 = Location(52.245696, -7.139102, 15f)
-            if (caaApp.zoom != 0f) {
-                location1.lat = caaApp.lat
-                location1.lng = caaApp.lng
-                location1.zoom = caaApp.zoom
-            }
-                val action = ReportCrimeActivityFragmentDirections.actionReportCrimeActivityFragmentToMapsFragment(location1)
-                findNavController().navigate(action)
-        }
-        registerMapCallback()
-    }
+//    fun setMapButtonListener(layout: FragmentReportCrimeActivityBinding) {
+//        layout.crimeLocation.setOnClickListener {
+//            val location1 = Location(52.245696, -7.139102, 15f)
+//            if (caaApp.zoom != 0f) {
+//                location1.lat = caaApp.lat
+//                location1.lng = caaApp.lng
+//                location1.zoom = caaApp.zoom
+//            }
+//                val action = ReportCrimeActivityFragmentDirections.actionReportCrimeActivityFragmentToMapsFragment(location1)
+//                findNavController().navigate(action)
+//        }
+//        registerMapCallback()
+//    }
 
 
     private fun render(status: Boolean) {
@@ -179,8 +181,9 @@ class ReportCrimeActivityFragment : Fragment() {
                     level=crimeLevel ,
                     date=date,
                     time=time,
-                    lat=app.loc.lat,lng=app.loc.lng,zoom=app.loc.zoom,
-                    email = loggedInViewModel.liveFirebaseUser.value?.email!!))
+                    email = loggedInViewModel.liveFirebaseUser.value?.email!!,
+                    latitude = mapsViewModel.currentLocation.value!!.latitude,
+                    longitude = mapsViewModel.currentLocation.value!!.longitude,))
                // app.crimeStore.create(crime)
                 Snackbar.make(fragBinding.root, "Crime added successfully", Snackbar.LENGTH_LONG)
                     .show()
@@ -218,25 +221,25 @@ class ReportCrimeActivityFragment : Fragment() {
             }
     }
 
-    private fun registerMapCallback() {
-        mapIntentLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-            { result ->
-                when (result.resultCode) {
-                    RESULT_OK -> {
-                        if (result.data != null) {
-                            i("Got Location ${result.data.toString()}")
-                            val location = result.data!!.extras?.getParcelable<Location>("location")!!
-                            i("Location == $location")
-                            caaApp.lat = app.loc.lat
-                            caaApp.lng = app.loc.lng
-                            caaApp.zoom = app.loc.zoom
-                        } // end of if
-                    }
-                    RESULT_CANCELED -> { } else -> { }
-                }
-            }
-    }
+//    private fun registerMapCallback() {
+//        mapIntentLauncher =
+//            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+//            { result ->
+//                when (result.resultCode) {
+//                    RESULT_OK -> {
+//                        if (result.data != null) {
+//                            i("Got Location ${result.data.toString()}")
+//                            val location = result.data!!.extras?.getParcelable<Location>("location")!!
+//                            i("Location == $location")
+//                            caaApp.lat = app.loc.lat
+//                            caaApp.lng = app.loc.lng
+//                            caaApp.zoom = app.loc.zoom
+//                        } // end of if
+//                    }
+//                    RESULT_CANCELED -> { } else -> { }
+//                }
+//            }
+//    }
 
 
 }

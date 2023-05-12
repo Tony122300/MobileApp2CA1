@@ -1,5 +1,6 @@
 package ie.wit.caa.ui.list
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.os.Bundle
 import android.view.*
@@ -147,6 +148,7 @@ class ListFragment : Fragment(), ReportClickListener {
             fragBinding.noCrimes.visibility = View.GONE
         }
     }
+    @SuppressLint("SuspiciousIndentation")
     private fun setSwipeRefresh() {
         fragBinding.swiperefresh.setOnRefreshListener {
             fragBinding.swiperefresh.isRefreshing = true

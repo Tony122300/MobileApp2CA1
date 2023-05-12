@@ -55,7 +55,7 @@ fun getCaa(userid:String, id: String) {
         Timber.i("Detail getCaa() Error : $e.message")
     }
 }
-    fun updateDonation(userid:String, id: String,caa: CaaModel) {
+    fun updateCaa(userid:String, id: String,caa: CaaModel) {
         try {
             FirebaseDBManager.update(userid, id, caa)
             Timber.i("Detail update() Success : $caa")
