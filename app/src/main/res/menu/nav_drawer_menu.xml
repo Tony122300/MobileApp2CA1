@@ -14,17 +14,23 @@
             android:icon="@drawable/ic_baseline_list_24"
             android:title="@string/action_list" />
         <item
-            android:id="@+id/viewMapsFragment"
+            android:id="@+id/mapsFragment2"
             android:icon="@drawable/ic_baseline_add_location_24"
             android:title="@string/action_maps" />
     </group>
     <item android:title="Access Control">
         <menu>
             <item
-                android:id="@+id/signOut"
+                android:id="@+id/signout"
                 android:icon="@android:drawable/ic_menu_revert"
                 android:onClick="signOut"
                 android:title="@string/sign_out" />
+            <item
+                android:id="@+id/theme_switch"
+                android:title="@string/theme_switch_label"
+                app:showAsAction="always"
+                app:actionLayout="@layout/theme_switch_layout"
+                android:onClick="onThemeSwitchClicked" />
         </menu>
     </item>
 </menu>

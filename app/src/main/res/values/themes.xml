@@ -33,4 +33,10 @@
         <item name="colorControlHighlight">@color/black</item>
     </style>
 
+    <style name="ThemeOverlay.FirebaseIcon" parent="Theme.CAA">
+        <item name="android:layout_marginTop">@dimen/icon_top_margin</item>
+        <item name="android:layout_marginBottom">@dimen/icon_bottom_margin</item>
+    </style>
+
+
 </resources>

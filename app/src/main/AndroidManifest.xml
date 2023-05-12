@@ -2,10 +2,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="ie.wit.caa">
-    <uses-permission android:name="android.permission.INTERNET"/>
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
         android:name=".main.caaApp"
@@ -15,10 +17,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.CAA">
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="YOUR_API_KEY" />
-
+            android:value="@string/google_api_key" />
         <activity
             android:name=".ui.auth.Login"
             android:exported="true">
@@ -27,12 +29,13 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        <meta-data
-            android:name="android.app.lib_name"
-            android:value="" />
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:theme="@style/Theme.CAA.NoActionBar"
+                android:value="" />
         </activity>
-        <activity
-            android:name="ie.wit.caa.activities.Home">
+        <activity android:name=".activities.Home">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
