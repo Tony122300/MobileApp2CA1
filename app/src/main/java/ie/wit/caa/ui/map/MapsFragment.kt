@@ -150,8 +150,10 @@ class MapsFragment : Fragment() {
                 Observer { caas ->
                     caas?.let {
                         render(caas as ArrayList<CaaModel>)
+
                     }
                 })
+
         }
     }
 
@@ -189,10 +191,11 @@ class MapsFragment : Fragment() {
         if (caaList.isNotEmpty()) {
             mapsViewModel.map.clear()
             caaList.forEach {
-                markerColour = if(it.email.equals(this.listViewModel.liveFirebaseUser.value!!.email))
-                    BitmapDescriptorFactory.HUE_AZURE + 5
-                else
-                    BitmapDescriptorFactory.HUE_RED
+                markerColour =
+                    if (it.email.equals(this.listViewModel.liveFirebaseUser.value!!.email))
+                        BitmapDescriptorFactory.HUE_AZURE + 5
+                    else
+                        BitmapDescriptorFactory.HUE_RED
                 val location = LatLng(it.latitude, it.longitude)
                 val level = it.level.coerceIn(1, 10) - 1 // index into levelColors array
                 val radiusColor = levelColors[level]
@@ -200,7 +203,7 @@ class MapsFragment : Fragment() {
                     MarkerOptions().position(LatLng(it.latitude, it.longitude))
                         .title("Lvl${it.level}! - ${it.type}")
                         .snippet(it.name)
-                        .icon(BitmapDescriptorFactory.defaultMarker(markerColour ))
+                        .icon(BitmapDescriptorFactory.defaultMarker(markerColour))
                 )
                 mapsViewModel.map.addCircle(
                     CircleOptions()
@@ -210,8 +213,11 @@ class MapsFragment : Fragment() {
                         .fillColor(radiusColor)
                 )
             }
+            mapsViewModel.checkDangerAreas(caaList, mapsViewModel.currentLocation.value!!)
         }
     }
+
+
     override fun onResume() {
         super.onResume()
         loggedInViewModel.liveFirebaseUser.observe(viewLifecycleOwner) {
@@ -231,10 +237,10 @@ class MapsFragment : Fragment() {
 
                 val item = menu.findItem(R.id.toggleCrimes) as MenuItem
                 item.setActionView(R.layout.togglebutton_layout)
-                val toggleDonations: SwitchCompat = item.actionView!!.findViewById(R.id.toggleButton)
-                toggleDonations.isChecked = false
+                val toggleCaas: SwitchCompat = item.actionView!!.findViewById(R.id.toggleButton)
+                toggleCaas.isChecked = false
 
-                toggleDonations.setOnCheckedChangeListener { _, isChecked ->
+                toggleCaas.setOnCheckedChangeListener { _, isChecked ->
                     if (isChecked) listViewModel.loadAll()
                     else listViewModel.load()
                 }

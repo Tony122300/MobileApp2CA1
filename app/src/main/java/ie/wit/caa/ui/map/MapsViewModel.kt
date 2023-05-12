@@ -1,7 +1,10 @@
 package ie.wit.caa.ui.map
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.AlertDialog
 import android.app.Application
+import android.content.Context
 import android.location.Location
 import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
@@ -9,6 +12,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.google.android.gms.location.*
 import com.google.android.gms.maps.GoogleMap
+import ie.wit.caa.models.CaaModel
 
 import timber.log.Timber
 
@@ -18,6 +22,8 @@ class MapsViewModel(application: Application) : AndroidViewModel(application) {
     lateinit var map : GoogleMap
     var currentLocation = MutableLiveData<Location>()
     var locationClient : FusedLocationProviderClient
+    val context = getApplication<Application>().applicationContext
+    var onMapRendered: (() -> Unit)? = null
     val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
         .setWaitForAccurateLocation(false)
         .setMinUpdateIntervalMillis(5000)
@@ -31,6 +37,7 @@ class MapsViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     init {
+
         locationClient = LocationServices.getFusedLocationProviderClient(application)
         locationClient.requestLocationUpdates(locationRequest, locationCallback,
             Looper.getMainLooper())
@@ -51,6 +58,30 @@ class MapsViewModel(application: Application) : AndroidViewModel(application) {
         Timber.i("MAP VM LOC : %s", currentLocation.value)
     }
 
+    fun checkDangerAreas(caaList: List<CaaModel>, userLocation: Location) {
+        onMapRendered = {
+            caaList.forEach { caa ->
+                val distance = FloatArray(1)
+                Location.distanceBetween(
+                    userLocation.latitude,
+                    userLocation.longitude,
+                    caa.latitude,
+                    caa.longitude,
+                    distance
+                )
+                if (distance[0] <= caa.level * 100) {
+                    // Show popup message for danger area
+                    val alertDialog = AlertDialog.Builder(context)
+                        .setTitle("Danger Area Alert")
+                        .setMessage("You are in a dangerous area: ${caa.name}")
+                        .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
+                        .create()
+
+                    alertDialog.show()
+                }
+            }
+        }
+    }
 
 
 }
